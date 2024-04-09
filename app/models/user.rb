@@ -1,4 +1,6 @@
 class User < ApplicationRecord
+  has_many :tickets
+
   enum role: { user: 0, admin: 1 }, _default: :user
 
   has_secure_password

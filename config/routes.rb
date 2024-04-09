@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   resources :users
   post '/auth/login', to: 'authentication#login'
-  get '/*a', to: 'application#not_found'
+
+  resources :tickets, only: %i[index show create update destroy]
 end
