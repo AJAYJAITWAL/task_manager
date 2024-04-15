@@ -1,0 +1,8 @@
+development:
+  host: 'localhost:9200'
+
+test:
+  host: 'localhost:9200'
+
+production:
+  host: ''

@@ -1,4 +1,7 @@
 class Ticket < ApplicationRecord
+  include Elasticsearch::Model
+  include Elasticsearch::Model::Callbacks
+
   belongs_to :user
 
   enum status: {

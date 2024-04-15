@@ -33,6 +33,14 @@ class TicketsController < ApplicationController
     @ticket.destroy
   end
 
+  def search
+    query = params[:search]
+
+    search_query = { query: { match: { title: query } } }
+    @results = current_user.tickets.search(search_query).records
+    render json: @results
+  end
+
   private
 
   def set_ticket
