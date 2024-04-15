@@ -36,8 +36,21 @@ class TicketsController < ApplicationController
   def search
     query = params[:search]
 
-    search_query = { query: { match: { title: query } } }
-    @results = current_user.tickets.search(search_query).records
+    search_query = {
+      query: {
+        bool: {
+          should: [
+            { match: { title: query } },
+            { match: { description: query } }
+          ],
+          must: [
+            { match: { user_id: current_user.id } }
+          ]
+        }
+      }
+    }
+
+    @results = Ticket.search(search_query).records
     render json: @results
   end
 
