@@ -41,7 +41,6 @@ class TicketsController < ApplicationController
         bool: {
           should: [
             { match: { title: query } },
-            { match: { description: query } }
           ],
           must: [
             { match: { user_id: current_user.id } }
