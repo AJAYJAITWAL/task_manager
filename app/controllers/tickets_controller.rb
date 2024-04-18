@@ -4,7 +4,7 @@ class TicketsController < ApplicationController
 
   def index
     query = params[:search]
-    @tickets = query.present? ? search_tickets(query) : current_user.tickets
+    @tickets = query.present? ? query_search(query) : current_user.tickets
 
     render json: @tickets
   end
@@ -37,30 +37,34 @@ class TicketsController < ApplicationController
 
   private
 
-  def set_ticket
-    @ticket = current_user.tickets.find(params[:id])
-  end
-
-  def ticket_params
-    params.require(:ticket).permit(:title, :description, :status)
-  end
-
-  def search_tickets(query)
+  def query_search(query)
     search_query = {
       query: {
         bool: {
-          should: [
-            { match_phrase: { title: query } },
-            { match_phrase: { description: query } },
-            { match: { status: query } }
-          ],
           must: [
-            { match: { user_id: current_user.id } }
+            { match: { user_id: current_user.id } },
+            {
+              bool: {
+                should: [
+                  { match_phrase: { title: query } },
+                  { match_phrase: { description: query } },
+                  { match: { status: query } }
+                ]
+              }
+            }
           ]
         }
       }
     }
 
     Ticket.search(search_query).records
+  end
+
+  def set_ticket
+    @ticket = current_user.tickets.find(params[:id])
+  end
+
+  def ticket_params
+    params.require(:ticket).permit(:title, :description, :status)
   end
 end

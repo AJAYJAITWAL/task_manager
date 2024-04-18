@@ -1,5 +1,5 @@
 class User < ApplicationRecord
-  has_many :tickets
+  has_many :tickets, dependent: :destroy
 
   enum role: { user: 0, admin: 1 }, _default: :user
 
